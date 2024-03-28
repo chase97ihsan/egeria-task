@@ -22,7 +22,7 @@ export default function Suppliers({ body, head }) {
     <div className="overflow-auto " style={{ maxHeight: "100vh" }}>
       {" "}
       <table
-        className="table table-dark  table-striped "
+        className="table table-dark  table-striped table-hover"
         style={{ minHeight: "100vh" }}
       >
         <thead className="table-dark border border-success  border-3 text-nowrap">

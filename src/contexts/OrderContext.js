@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { toast, Bounce } from "react-toastify";
 
 import axios from "axios";
 
@@ -6,47 +7,39 @@ export const OrderContext = createContext();
 function OrderContextProvider({ children }) {
   const [orders, setOrders] = useState([]);
   const [filteredOrders, setFilteredOrders] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const getOrders = () => {
     axios
       .get("https://localhost:7140/Get/Order/All")
       .then((res) => {
         setOrders(res.data.result);
-        console.log("okkkkk");
       })
       .catch((err) => {
         console.log("İşlem Başarısız" + ":" + err);
       });
   };
 
-  const getFileterOrdersByObjkey = (objkey) => {
-    setLoading(true);
-    axios
-      .get(`https://localhost:7140/Get/Order/ByObjkey/${objkey}`)
-      .then((res) => {
-        setFilteredOrders(res.data.result); // Filtrelenmiş verileri saklayın
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
-      });
+  const getFilteredOrdersByObjkey = (objkey) => {
+    const filteredOrders = orders.filter((o) => {
+      return o.objkey === objkey;
+    });
+    if (filteredOrders !== null && filteredOrders.length !== 0) {
+      setOrders(filteredOrders);
+    }
+    return orders;
   };
 
-  const getFileterOrdersByCustomername = (customerName) => {
-    setLoading(true);
-    axios
-      .get(`https://localhost:7140/Get/Order/ByOrderNo/${customerName}`)
-      .then((res) => {
-        setFilteredOrders(res.data.result); // Filtrelenmiş verileri saklayın
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err);
-        setLoading(false);
-      });
+  const getFilteredOrdersByCustomername = (customerName) => {
+    const filteredOrders = orders.filter((o) => {
+      return (
+        o.customerName.replace(" ", "") ===
+        customerName.replace(" ", "").toLocaleUpperCase("en-EN")
+      );
+    });
+    if (filteredOrders !== null && filteredOrders.length !== 0) {
+      setOrders(filteredOrders);
+    }
+    return orders;
   };
 
   const sendEmail = (data) => {
@@ -54,9 +47,15 @@ function OrderContextProvider({ children }) {
     axios
       .post("https://localhost:7140/api/Email/SendOrderInformation", data)
       .then((res) => {
-        console.log("İşlem Başarılı!");
+        toast.success("Email has been sent successfully!", {
+          position: "top-right",
+        });
       })
       .catch((err) => {
+        toast.error("Email could not be sent!", {
+          position: "top-right",
+          transition: Bounce,
+        });
         console.log("İşlem Başarısız" + ":" + err.message);
       });
   };
@@ -67,8 +66,8 @@ function OrderContextProvider({ children }) {
         getOrders,
         orders,
         sendEmail,
-        getFileterOrdersByObjkey,
-        getFileterOrdersByCustomername,
+        getFilteredOrdersByObjkey,
+        getFilteredOrdersByCustomername,
         filteredOrders,
       }}
     >

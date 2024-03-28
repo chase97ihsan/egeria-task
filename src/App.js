@@ -6,6 +6,8 @@ import { Route, Routes } from "react-router-dom";
 import Customers from "./components/Customers";
 import Suppliers from "./components/Suppliers";
 import MainPage from "./components/MainPage";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer, toast } from "react-toastify";
 
 function App() {
   return (
@@ -22,6 +24,7 @@ function App() {
             <Route path="/suppliers" element={<Suppliers />} />
           </Route>
         </Routes>
+        <ToastContainer />
       </div>
     </div>
   );

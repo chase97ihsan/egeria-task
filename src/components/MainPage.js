@@ -43,7 +43,7 @@ export default function MainPage() {
             <Orders
               head={[
                 { name: "Order No" },
-                { name: "Customer No" },
+                { name: "Customer Name" },
                 { name: "Date Entered" },
                 { name: "State" },
                 { name: "ObjKey" },
@@ -53,7 +53,7 @@ export default function MainPage() {
                 orders &&
                 orders.map((order, index) => [
                   order.orderNo,
-                  order.customerNo,
+                  order.customerName,
                   order.dateEntered,
                   order.state,
                   order.objkey,
